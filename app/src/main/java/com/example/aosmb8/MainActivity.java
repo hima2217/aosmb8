@@ -43,15 +43,13 @@ public class MainActivity extends AppCompatActivity {
             Log.d(filename, String.valueOf(file.createNewFile()));
             file.delete();
         } catch (IOException e) {
-            e.printStackTrace();
-        }
+            e.printStackTrace();}
+
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt("secretkey", 22);
-
         editor.apply();
         Log.d("proverochka", String.valueOf(sharedPref.getInt("secretkey", 22)));
-
 
 
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
