@@ -1,6 +1,7 @@
-package com.example.aosmb8;
+package com.example.aosmb8.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
 import android.content.Context;
@@ -9,17 +10,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 
+import com.example.aosmb8.data.DoctorDB.DoctorDatabase;
+import com.example.aosmb8.data.DoctorDB.Doctor;
+import com.example.aosmb8.R;
+
 import java.io.File;
 import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,9 +28,7 @@ public class MainActivity extends AppCompatActivity {
             File file = new File(this.getFilesDir(), filename);
             Log.d(filename, String.valueOf(file.createNewFile()));
             file.delete();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         try {
@@ -43,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d(filename, String.valueOf(file.createNewFile()));
             file.delete();
         } catch (IOException e) {
-            e.printStackTrace();}
+            e.printStackTrace();
+        }
 
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -52,8 +47,32 @@ public class MainActivity extends AppCompatActivity {
         Log.d("proverochka", String.valueOf(sharedPref.getInt("secretkey", 22)));
 
 
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "doctors").allowMainThreadQueries().build();
+        DoctorVM doctorVM = new ViewModelProvider(this).get(DoctorVM.class);
+        doctorVM.getAllDoctor().observe(this, doctors -> {
+                        doctors.add(new Doctor("George"));
+                        doctors.add(new Doctor("Harry"));
+                        doctors.add(new Doctor("Jacob"));
+                        doctors.add(new Doctor("Thomas"));
+
+                        Doctor doctor1 = doctors.get(0);
+                        Doctor doctor2 = doctors.get(3);
+                        Doctor doctor3 = doctors.get(2);
+                        Doctor doctor4 = doctors.get(3);
+
+                        Log.i("Doctor_1", doctor1.name);
+                        Log.i("Doctor_2", doctor2.name);
+                        Log.i("Doctor_3", doctor3.name);
+                        Log.i("Doctor_4", doctor4.name);
+
+
+
+                }
+        );
+
+
+/*
+        DoctorDatabase db = Room.databaseBuilder(getApplicationContext(),
+                DoctorDatabase.class, "doctors").allowMainThreadQueries().build();
         int id = 22;
         String statusDoctor = "Kenny";
         db.doctorDao().insert(id, "Kenny");
@@ -61,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(kenny.status, String.valueOf(kenny.doctorID));
         db.doctorDao().delete(id);
 
+
+*/
     }
-
-
 }
